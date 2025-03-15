@@ -8,6 +8,8 @@ import { RootState } from "./store";
 import axios from "axios";
 
 export interface Product {
+  mealName: any;
+  mealThumb: string | undefined;
   id?: string;
   idCategory: string;
   strCategory: string;
@@ -35,6 +37,12 @@ export interface Meal {
 const productAdapter = createEntityAdapter<Product>({
   selectId: (product) => product.idCategory,
 });
+// Define an adapter for recommended products
+const recommendProductAdapter = createEntityAdapter({
+  selectId: (product) => product._id, // Using `_id` as the unique identifier
+});
+
+// Initial state using the adapter's getInitialState
 
 const breakfastAdapter = createEntityAdapter<Breakfast>({
   selectId: (breakfast) => breakfast.idMeal,
@@ -107,12 +115,29 @@ export const fetchSeeFood = createAsyncThunk(
   }
 );
 
+// Async thunk for fetching Recommend Product
+export const fetchRecommendProduct = createAsyncThunk(
+  "/recommendProduct",
+  async (cart) => {
+    const response = await axios.post(
+      "http://127.0.0.1:5000/recommendproduct",
+      {
+        cart: cart,
+      }
+    );
+    return response.data as Product[];
+  }
+);
+
 // Initial states
 const initialProductState: EntityState<Product> & { status: string } =
   productAdapter.getInitialState({
     status: "idle",
   });
 
+const initialRecommendProductState = recommendProductAdapter.getInitialState({
+  status: "idle",
+});
 const initialBreakfastState: EntityState<Breakfast> & { status: string } =
   breakfastAdapter.getInitialState({
     status: "idle",
@@ -154,6 +179,26 @@ const productSlice = createSlice({
     builder.addCase(fetchProduct.rejected, (state) => {
       state.status = "failed";
     });
+  },
+});
+// Recommend Product slice
+const recommendProductSlice = createSlice({
+  name: "recommendProduct",
+  initialState: initialRecommendProductState,
+  reducers: {}, // No manual reducers needed as of now
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchRecommendProduct.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchRecommendProduct.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        recommendProductAdapter.setAll(state, action.payload);
+      })
+      .addCase(fetchRecommendProduct.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
   },
 });
 
@@ -235,6 +280,13 @@ export const {
   selectById: selectProductById,
   selectIds: selectProductIds,
 } = productAdapter.getSelectors((state: RootState) => state.product);
+// Selectors
+export const {
+  selectAll: selectAllRecommendProducts,
+  selectById: selectRecommendProductById,
+} = recommendProductAdapter.getSelectors(
+  (state: RootState) => state.recommendProduct
+);
 
 export const {
   selectAll: selectAllBreakfasts,
@@ -267,4 +319,5 @@ export default {
   meal: mealSlice.reducer,
   randommeal: randomMealSlice.reducer,
   seafood: seeFoodSlice.reducer,
+  recommendproduct: recommendProductSlice.reducer,
 };

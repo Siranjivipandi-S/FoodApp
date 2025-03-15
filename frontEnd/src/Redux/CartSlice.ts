@@ -4,22 +4,24 @@ import {
   createAsyncThunk,
 } from "@reduxjs/toolkit";
 import axios from "axios";
-import useGetToken from "../components/token";
 
 export interface CartItem {
   id: string;
   mealName: string;
   quantity: number;
   mealThumb: string;
-  price: number;
+  price: number; // Price per unit
 }
+
 export interface UpdateCartType {
   id: string;
   quantity: number;
 }
+
 const CartAdapter = createEntityAdapter<CartItem>({
   selectId: (item) => item.id,
 });
+
 const baseUrl = "http://127.0.0.1:5000";
 
 export const AddtoCart = createAsyncThunk(
@@ -33,13 +35,27 @@ export const AddtoCart = createAsyncThunk(
     }
   }
 );
+
 export const UpdateCartEvent = createAsyncThunk(
   "/updateCart",
-  async (item: UpdateCartType) => {
+  async (item: UpdateCartType, { getState }) => {
     const { id, quantity } = item;
-    return { id, quantity };
+    const state = getState() as {
+      cart: ReturnType<typeof CartAdapter.getInitialState>;
+    };
+    const cartItem = CartAdapter.getSelectors().selectById(state.cart, id);
+
+    if (!cartItem) {
+      throw new Error("Cart item not found");
+    }
+
+    // Calculate the new price based on the quantity
+    const newPrice = cartItem.price * quantity;
+
+    return { id, quantity, price: newPrice };
   }
 );
+
 export const DeleteCartEvent = createAsyncThunk(
   "/DeleteItemInCart",
   async (id: string) => {
@@ -84,6 +100,7 @@ export const checkoutEvent = createAsyncThunk(
     }
   }
 );
+
 const CartSlice = createSlice({
   name: "cart",
   initialState: CartAdapter.getInitialState({}),
@@ -92,15 +109,19 @@ const CartSlice = createSlice({
     builder.addCase(AddtoCart.fulfilled, (state, action) => {
       CartAdapter.addOne(state, action.payload);
     });
+
     builder.addCase(UpdateCartEvent.fulfilled, (state, action) => {
+      const { id, quantity, price } = action.payload;
       CartAdapter.updateOne(state, {
-        id: action.payload.id,
-        changes: { quantity: action.payload.quantity },
+        id,
+        changes: { quantity, price }, // Update both quantity and price
       });
     });
+
     builder.addCase(DeleteCartEvent.fulfilled, (state, action) => {
       CartAdapter.removeOne(state, action.payload.id);
     });
+
     builder.addCase(checkoutEvent.fulfilled, (state, action) => {
       CartAdapter.removeAll(state);
     });
@@ -111,6 +132,9 @@ export const {
   selectAll: selectAllCartItems,
   selectById: selectCartItemById,
   selectIds: selectCartItemIds,
-} = CartAdapter.getSelectors((state: CartItem[]) => state.cart);
+} = CartAdapter.getSelectors(
+  (state: { cart: ReturnType<typeof CartAdapter.getInitialState> }) =>
+    state.cart
+);
 
 export default CartSlice.reducer;

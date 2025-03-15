@@ -13,7 +13,9 @@ const TokenSlice = createSlice({
       state.token = action.payload.token;
     },
     removeToken: (state, action) => {
-      state.token = "";
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      window.location.reload();
     },
   },
 });

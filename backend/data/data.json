@@ -1,0 +1,402 @@
+[
+  {
+    "_id": "meal_52959_1",
+    "strMeal": "Baked salmon with fennel & tomatoes",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1548772327.jpg",
+    "idMeal": "52959",
+    "price": 119,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52819_2",
+    "strMeal": "Cajun spiced fish tacos",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/uvuyxu1503067369.jpg",
+    "idMeal": "52819",
+    "price": 299,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52944_3",
+    "strMeal": "Escovitch Fish",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1520084413.jpg",
+    "idMeal": "52944",
+    "price": 399,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_53043_4",
+    "strMeal": "Fish fofos",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/a15wsa1614349126.jpg",
+    "idMeal": "53043",
+    "price": 199,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52802_5",
+    "strMeal": "Fish pie",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/ysxwuq1487323065.jpg",
+    "idMeal": "52802",
+    "price": 299,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_53079_6",
+    "strMeal": "Fish Soup (Ukha)",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/7n8su21699013057.jpg",
+    "idMeal": "53079",
+    "price": 249,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52918_7",
+    "strMeal": "Fish Stew with Rouille",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/vptqpw1511798500.jpg",
+    "idMeal": "52918",
+    "price": 249,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52764_8",
+    "strMeal": "Garides Saganaki",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/wuvryu1468232995.jpg",
+    "idMeal": "52764",
+    "price": 299,
+    "category": "Seafood"
+  },
+  {
+    "_id": "meal_53041_9",
+    "strMeal": "Grilled Portuguese sardines",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/lpd4wy1614347943.jpg",
+    "idMeal": "53041",
+    "price": 199,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52773_10",
+    "strMeal": "Honey Teriyaki Salmon",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/xxyupu1468262513.jpg",
+    "idMeal": "52773",
+    "price": 299,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52887_11",
+    "strMeal": "Kedgeree",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/utxqpt1511639216.jpg",
+    "idMeal": "52887",
+    "price": 249,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52946_12",
+    "strMeal": "Kung Po Prawns",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1525873040.jpg",
+    "idMeal": "52946",
+    "price": 299,
+    "category": "Seafood"
+  },
+  {
+    "_id": "meal_52821_13",
+    "strMeal": "Laksa King Prawn Noodles",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/rvypwy1503069308.jpg",
+    "idMeal": "52821",
+    "price": 299,
+    "category": "Seafood"
+  },
+  {
+    "_id": "meal_52777_14",
+    "strMeal": "Mediterranean Pasta Salad",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/wvqpwt1468339226.jpg",
+    "idMeal": "52777",
+    "price": 299,
+    "category": "Salad"
+  },
+  {
+    "_id": "meal_53048_15",
+    "strMeal": "Mee goreng mamak",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/xquakq1619787532.jpg",
+    "idMeal": "53048",
+    "price": 399,
+    "category": "Noodles"
+  },
+  {
+    "_id": "meal_53051_16",
+    "strMeal": "Nasi lemak",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/wai9bw1619788844.jpg",
+    "idMeal": "53051",
+    "price": 119,
+    "category": "Rice"
+  },
+  {
+    "_id": "meal_53045_17",
+    "strMeal": "Portuguese fish stew (Caldeirada de peixe)",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/do7zps1614349775.jpg",
+    "idMeal": "53045",
+    "price": 119,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52809_18",
+    "strMeal": "Recheado Masala Fish",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/uwxusv1487344500.jpg",
+    "idMeal": "52809",
+    "price": 119,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52960_19",
+    "strMeal": "Salmon Avocado Salad",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1549542994.jpg",
+    "idMeal": "52960",
+    "price": 199,
+    "category": "Salad"
+  },
+  {
+    "_id": "meal_52823_20",
+    "strMeal": "Salmon Prawn Risotto",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/xxrxux1503070723.jpg",
+    "idMeal": "52823",
+    "price": 199,
+    "category": "Seafood"
+  },
+  {
+    "_id": "meal_52936_21",
+    "strMeal": "Saltfish and Ackee",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/vytypy1511883765.jpg",
+    "idMeal": "52936",
+    "price": 199,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52836_22",
+    "strMeal": "Seafood fideuà",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/wqqvyq1511179730.jpg",
+    "idMeal": "52836",
+    "price": 299,
+    "category": "Seafood"
+  },
+  {
+    "_id": "meal_52953_23",
+    "strMeal": "Shrimp Chow Fun",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1529445434.jpg",
+    "idMeal": "52953",
+    "price": 299,
+    "category": "Seafood"
+  },
+  {
+    "_id": "meal_53023_24",
+    "strMeal": "Sledz w Oleju (Polish Herrings)",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/7ttta31593350374.jpg",
+    "idMeal": "53023",
+    "price": 299,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_53040_25",
+    "strMeal": "Spring onion and prawn empanadas",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c5oso1614347493.jpg",
+    "idMeal": "53040",
+    "price": 119,
+    "category": "Seafood"
+  },
+  {
+    "_id": "meal_53065_26",
+    "strMeal": "Sushi",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/g046bb1663960946.jpg",
+    "idMeal": "53065",
+    "price": 399,
+    "category": "Seafood"
+  },
+  {
+    "_id": "meal_52882_27",
+    "strMeal": "Three Fish Pie",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/spswqs1511558697.jpg",
+    "idMeal": "52882",
+    "price": 399,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52975_28",
+    "strMeal": "Tuna and Egg Briks",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2dsltq1560461468.jpg",
+    "idMeal": "52975",
+    "price": 119,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_52852_29",
+    "strMeal": "Tuna Nicoise",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/yypwwq1511304979.jpg",
+    "idMeal": "52852",
+    "price": 399,
+    "category": "Fish"
+  },
+  {
+    "_id": "meal_53016_30",
+    "strMeal": "Chick-Fil-A Sandwich",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/sbx7n71587673021.jpg",
+    "idMeal": "53016",
+    "price": 100,
+    "category": "Chicken"
+  },
+  {
+    "_id": "meal_52850_31",
+    "strMeal": "Chicken Couscous",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/qxytrx1511304021.jpg",
+    "idMeal": "52850",
+    "price": 150,
+    "category": "Chicken"
+  },
+  {
+    "_id": "meal_53017_32",
+    "strMeal": "Chicken Tikka Masala",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/8c0m8d1585561234.jpg",
+    "idMeal": "53017",
+    "price": 250,
+    "category": "Chicken"
+  },
+  {
+    "_id": "meal_52851_33",
+    "strMeal": "Chicken Fajitas",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2c8v8d1511304081.jpg",
+    "idMeal": "52851",
+    "price": 200,
+    "category": "Chicken"
+  },
+  {
+    "_id": "meal_53018_34",
+    "strMeal": "Grilled Chicken Salad",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c8v8d1585561234.jpg",
+    "idMeal": "53018",
+    "price": 180,
+    "category": "Salad"
+  },
+  {
+    "_id": "meal_52976_35",
+    "strMeal": "Chicken Alfredo",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2c8v8d1560461468.jpg",
+    "idMeal": "52976",
+    "price": 220,
+    "category": "Pasta"
+  },
+  {
+    "_id": "meal_53019_36",
+    "strMeal": "Chicken Parmesan",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c8v8d1585561234.jpg",
+    "idMeal": "53019",
+    "price": 300,
+    "category": "Chicken"
+  },
+  {
+    "_id": "meal_52853_37",
+    "strMeal": "Vegetable Stir Fry",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2c8v8d1511304979.jpg",
+    "idMeal": "52853",
+    "price": 120,
+    "category": "Vegetarian"
+  },
+  {
+    "_id": "meal_53020_38",
+    "strMeal": "Vegetable Curry",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c8v8d1585561234.jpg",
+    "idMeal": "53020",
+    "price": 200,
+    "category": "Vegetarian"
+  },
+  {
+    "_id": "meal_52977_39",
+    "strMeal": "Vegetable Lasagna",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2c8v8d1560461468.jpg",
+    "idMeal": "52977",
+    "price": 250,
+    "category": "Vegetarian"
+  },
+  {
+    "_id": "meal_53021_40",
+    "strMeal": "Quinoa Salad",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c8v8d1585561234.jpg",
+    "idMeal": "53021",
+    "price": 150,
+    "category": "Salad"
+  },
+  {
+    "_id": "meal_52854_41",
+    "strMeal": "Caprese Salad",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2c8v8d1511304979.jpg",
+    "idMeal": "52854",
+    "price": 130,
+    "category": "Salad"
+  },
+  {
+    "_id": "meal_53022_42",
+    "strMeal": "Greek Salad",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c8v8d1585561234.jpg",
+    "idMeal": "53022",
+    "price": 140,
+    "category": "Salad"
+  },
+  {
+    "_id": "meal_52978_43",
+    "strMeal": "Fruit Salad",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2c8v8d1560461468.jpg",
+    "idMeal": "52978",
+    "price": 100,
+    "category": "Salad"
+  },
+  {
+    "_id": "meal_53023_44",
+    "strMeal": "Pasta Primavera",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c8v8d1585561234.jpg",
+    "idMeal": "53023",
+    "price": 220,
+    "category": "Pasta"
+  },
+  {
+    "_id": "meal_52855_45",
+    "strMeal": "Spaghetti Bolognese",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2c8v8d1511304979.jpg",
+    "idMeal": "52855",
+    "price": 250,
+    "category": "Pasta"
+  },
+  {
+    "_id": "meal_53024_46",
+    "strMeal": "Fettuccine Alfredo",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c8v8d1585561234.jpg",
+    "idMeal": "53024",
+    "price": 240,
+    "category": "Pasta"
+  },
+  {
+    "_id": "meal_52979_47",
+    "strMeal": "Penne Arrabbiata",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2c8v8d1560461468.jpg",
+    "idMeal": "52979",
+    "price": 230,
+    "category": "Pasta"
+  },
+  {
+    "_id": "meal_53025_48",
+    "strMeal": "Beef Stroganoff",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c8v8d1585561234.jpg",
+    "idMeal": "53025",
+    "price": 300,
+    "category": "Beef"
+  },
+  {
+    "_id": "meal_52856_49",
+    "strMeal": "Beef Tacos",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/2c8v8d1511304979.jpg",
+    "idMeal": "52856",
+    "price": 180,
+    "category": "Beef"
+  },
+  {
+    "_id": "meal_53026_50",
+    "strMeal": "Beef Burger",
+    "strMealThumb": "https://www.themealdb.com/images/media/meals/1c8v8d1585561234.jpg",
+    "idMeal": "53026",
+    "price": 250,
+    "category": "Beef"
+  }
+]

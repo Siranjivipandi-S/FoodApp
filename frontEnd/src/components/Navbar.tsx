@@ -10,7 +10,7 @@ function Navbar() {
   const cartItem = useSelector((state: RootState) => selectAllCartItems(state));
   const cartLength = cartItem?.length;
   const [animate, setAnimate] = useState(false);
-  const userExists = useSelector((state: RootState) => state.token.token);
+  const userExists = localStorage.getItem("token");
 
   useEffect(() => {
     setAnimate(true);

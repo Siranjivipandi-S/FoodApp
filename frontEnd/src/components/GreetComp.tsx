@@ -1,12 +1,13 @@
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-import { RootState } from "../Redux/store";
-import { selectAllUsers } from "../Redux/loginslice";
 import scrolldown from "../assets/scrolldown.gif";
-import { setToken } from "../Redux/TokenSlice";
+
 function GreetComp() {
-  const dispatch = useDispatch();
-  const user = useSelector((state: RootState) => selectAllUsers(state));
+  function scrolltoDown() {
+    window.scrollTo({
+      top: window.innerHeight - 100, // Scroll down to the next section
+      behavior: "smooth",
+    });
+  }
+  const user = localStorage.getItem("user");
 
   return (
     <div className="absolute top-72 mt-10 h-[410px] w-[550px]">
@@ -19,18 +20,18 @@ function GreetComp() {
         </h1>
         {user && (
           <h1 className="text-6xl ml-3 p-2 text-gradient selection:bg-orange-300 selection:text-white">
-            {user[0]?.username}!
+            {user}!
           </h1>
         )}
 
-        <div className="relative left-72">
-          <Link
-            to={"/menu"}
+        <div className="ml-5">
+          <button
+            onClick={scrolltoDown}
             className="p-2 bg-gradient-to-r from-slate-200 via-orange-400 to-orange-300 rounded-xl w-40 h-fit flex flex-row items-center justify-center gap-5 font-medium hover:scale-105 transition-transform hover:bg-yellow-500"
           >
             Scroll Down
             <img src={scrolldown} className="h-9 w-9"></img>
-          </Link>
+          </button>
         </div>
       </div>
     </div>

@@ -31,9 +31,10 @@ export const LoginDispatch = createAsyncThunk<User, User>(
   async (userData) => {
     try {
       const response = await axios.post<User>(`${baseUrl}/login`, userData);
-      // if (response) {
-      //   sessionStorage.setItem("token", response.data.token);
-      // }
+      if (response) {
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", response?.data?.username);
+      }
       return response.data;
     } catch (error) {
       console.error(error);

@@ -14,6 +14,7 @@ const store = configureStore({
     cart: CartSlice,
     login: loginslice,
     token: TokenSlice,
+    recommendproduct: productslice.recommendproduct,
   },
 });
 
