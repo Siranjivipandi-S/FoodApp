@@ -54,3 +54,43 @@
     @apply bg-gradient-to-r from-purple-600 via-yellow-500 to-slate-800 bg-clip-text text-transparent;
   }
 }
+.barchat-css {
+  background-color: white;
+  height: 420px !important;
+  width: 90% !important;
+  border-radius: 20px;
+  padding: 10px;
+}
+.barchat-css-pie {
+  background-color: white;
+  height: 420px !important;
+  width: 50% !important;
+  border-radius: 20px;
+  padding: 10px;
+}
+.barchat-css .chart-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0px;
+}
+
+.barchat-css .chart-container .chart {
+  margin-top: 60px;
+  height: 250px !important;
+}
+.barchat-css-pie .pie-chart canvas {
+  box-sizing: border-box;
+  display: block;
+  height: 320px !important;
+  width: 600px !important;
+  margin-top: 20px;
+}
+.barchat-css .line-chart canvas {
+  box-sizing: border-box;
+  margin-top: 20px;
+  display: block;
+  height: 340px !important;
+  width: 820px !important;
+}

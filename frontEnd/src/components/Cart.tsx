@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { FaCartShopping } from "react-icons/fa6";
 import toast, { Toaster } from "react-hot-toast";
@@ -31,9 +31,10 @@ function Cart() {
   }, [Carts]);
   const dispatch = useDispatch();
   const [publishableKey, setPublishableKey] = useState("");
+
   const currentUser = useSelector((state: RootState) => selectAllUsers(state));
-  const username = currentUser ? currentUser[0]?.username : null;
-  const useremail = currentUser ? currentUser[0]?.email : null;
+  const username = localStorage.getItem("user");
+  const useremail = localStorage.getItem("useremail");
 
   const totalprice = Carts?.reduce((accumulator, currentItem) => {
     return accumulator + currentItem.price;
@@ -41,14 +42,17 @@ function Cart() {
   const ShippingCharges = Carts?.length * 20;
   const TaxCharges = Carts?.length * 3.5;
   const CartPrice = totalprice + ShippingCharges + TaxCharges;
+  const [loading, SetLoading] = useState(false);
   async function getRecommendedProduct() {
     try {
+      SetLoading(true);
       const response = await dispatch(
         fetchRecommendProduct({
           Carts,
         })
       );
       if (response) {
+        SetLoading(false);
         SetRecommendProduct(response.payload);
       }
       console.log(response.payload, "Recommended Product");
@@ -102,6 +106,8 @@ function Cart() {
   const checkout = async (products: CartItem[]) => {
     try {
       const stripe = await loadStripe(publishableKey);
+      console.log(stripe, "publishableKey");
+
       const response = await dispatch(
         checkoutEvent({
           product: products,
@@ -229,49 +235,55 @@ function Cart() {
             </div>
           </div>
         </div>
-        {Carts && Carts.length > 0 && (
-          <div className="relative w-full bg-slate-900 mt-10">
-            <h1 className="text-5xl text-white text-start ml-8 select-none">
-              Recommended <span className="text-yellow-500">Products</span>
-            </h1>
-            <div className="flex overflow-x-auto pl-5 px-2 mt-10 gap-5 no-scrollbar">
-              <div className="flex flex-nowrap space-x-5">
-                {RecommendedProduct &&
-                  RecommendedProduct.map((item) => (
-                    <div className="flex-shrink-0" key={item.idMeal}>
-                      <div className="bg-slate-800 h-[360px] w-[300px] mb-3 rounded-xl relative shadow-lg overflow-hidden">
-                        <div className="absolute bg-pink-50 h-[200px] w-[370px] rounded-bl-full -left-14">
-                          <div className="flex items-center justify-center mt-2">
-                            <img
-                              src={item.strMealThumb}
-                              alt=""
-                              className="ml-5 rounded-full h-44 w-52 hover:scale-110 transition-transform select-none"
-                            />
+        {loading ? (
+          <div className="text-center text-4xl text-white">Loading</div>
+        ) : (
+          Carts.length > 0 &&
+          Array.isArray(RecommendedProduct) &&
+          RecommendedProduct.length > 0 && (
+            <div className="relative w-full bg-slate-900 mt-10">
+              <h1 className="text-5xl text-white text-start ml-8 select-none">
+                Recommended <span className="text-yellow-500">Products</span>
+              </h1>
+              <div className="flex overflow-x-auto pl-5 px-2 mt-10 gap-5 no-scrollbar">
+                <div className="flex flex-nowrap space-x-5">
+                  {RecommendedProduct &&
+                    RecommendedProduct.map((item) => (
+                      <div className="flex-shrink-0" key={item.idMeal}>
+                        <div className="bg-slate-800 h-[360px] w-[300px] mb-3 rounded-xl relative shadow-lg overflow-hidden">
+                          <div className="absolute bg-pink-50 h-[200px] w-[370px] rounded-bl-full -left-14">
+                            <div className="flex items-center justify-center mt-2">
+                              <img
+                                src={item.strMealThumb}
+                                alt=""
+                                className="ml-5 rounded-full h-44 w-52 hover:scale-110 transition-transform select-none"
+                              />
+                            </div>
                           </div>
-                        </div>
-                        <div className="flex flex-col z-20 mt-56 ml-4 gap-4">
-                          <h2 className="text-2xl text-green-300 select-none">
-                            {`${item.strMeal.slice(0, 20)}..`}
-                          </h2>
-                          <div className="flex items-center justify-between">
-                            <p className="text-lg text-white select-none">
-                              Rs. {item.price}
-                            </p>
-                            <Link
-                              onClick={() => CartEvent(item)}
-                              className="select-none flex font-medium items-center gap-2 mr-5 bg-orange-400 rounded-full p-2 hover:bg-orange-300 hover:scale-105 transition-transform"
-                            >
-                              Add Cart
-                              <FaCartShopping size={20} color="white" />
-                            </Link>
+                          <div className="flex flex-col z-20 mt-56 ml-4 gap-4">
+                            <h2 className="text-2xl text-green-300 select-none">
+                              {`${item.strMeal.slice(0, 20)}..`}
+                            </h2>
+                            <div className="flex items-center justify-between">
+                              <p className="text-lg text-white select-none">
+                                Rs. {item.price}
+                              </p>
+                              <Link
+                                onClick={() => CartEvent(item)}
+                                className="select-none flex font-medium items-center gap-2 mr-5 bg-orange-400 rounded-full p-2 hover:bg-orange-300 hover:scale-105 transition-transform"
+                              >
+                                Add Cart
+                                <FaCartShopping size={20} color="white" />
+                              </Link>
+                            </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                </div>
               </div>
             </div>
-          </div>
+          )
         )}
       </div>
     </div>

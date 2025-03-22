@@ -156,11 +156,11 @@ const checkoutCart = asyncHandler(
     try {
       const lineItems = cartItems.map((item) => ({
         price_data: {
-          currency: "inr", // Correct currency code for Indian Rupees
+          currency: "inr",
           product_data: {
             name: item.mealName,
           },
-          unit_amount: item.price * 100, // Stripe requires amount in paise (1 INR = 100 paise)
+          unit_amount: item.price * 100,
         },
         quantity: item.quantity,
       }));
@@ -182,12 +182,12 @@ const checkoutCart = asyncHandler(
         await newCart.save();
       }
 
-      console.log("Stripe session created:", session.id); // Log the session ID
+      console.log("Stripe session created:", session.id);
       res
         .status(201)
         .json({ message: "Cart items successfully stored", id: session.id });
     } catch (error) {
-      console.error("Error creating Stripe session:", error); // Log any errors
+      console.error("Error creating Stripe session:", error);
       res.status(500).json({ message: "Internal Server Error", error });
     }
   }

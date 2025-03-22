@@ -49,7 +49,11 @@ function LoginPage() {
           setError("password", { type: "custom", message: "Invalid password" });
         }
       } else {
-        navigate("/");
+        if (data.email == "siranjivi@gmail.com") {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       }
     } catch (error) {
       setError("password", { type: "custom", message: "Invalid password" });

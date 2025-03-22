@@ -11,6 +11,9 @@ function Navbar() {
   const cartLength = cartItem?.length;
   const [animate, setAnimate] = useState(false);
   const userExists = localStorage.getItem("token");
+  const userMail = localStorage.getItem("useremail");
+  const showDashborad = userMail == "siranjivi@gmail.com";
+  console.log(showDashborad, "Access");
 
   useEffect(() => {
     setAnimate(true);
@@ -46,6 +49,16 @@ function Navbar() {
               Home
             </Link>
           </li>
+          {showDashborad && (
+            <li>
+              <Link
+                to={"/admin"}
+                className="font-sans p-2 text-lg text-white hover:text-orange-300 rounded-lg"
+              >
+                Dashboard
+              </Link>
+            </li>
+          )}
           {userExists ? (
             <li>
               <Link

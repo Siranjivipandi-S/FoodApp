@@ -34,6 +34,7 @@ export const LoginDispatch = createAsyncThunk<User, User>(
       if (response) {
         localStorage.setItem("token", response.data.token);
         localStorage.setItem("user", response?.data?.username);
+        localStorage.setItem("useremail", response?.data?.email);
       }
       return response.data;
     } catch (error) {

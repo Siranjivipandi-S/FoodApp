@@ -3,6 +3,7 @@ import productslice from "./Productslice";
 import CartSlice from "./CartSlice";
 import loginslice from "./loginslice";
 import TokenSlice from "./TokenSlice";
+import transactionSlice from "./AdminSlice";
 
 const store = configureStore({
   reducer: {
@@ -15,6 +16,7 @@ const store = configureStore({
     login: loginslice,
     token: TokenSlice,
     recommendproduct: productslice.recommendproduct,
+    transactions: transactionSlice,
   },
 });
 

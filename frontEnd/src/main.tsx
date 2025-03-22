@@ -21,6 +21,7 @@ import {
 } from "./Redux/Productslice";
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 import SuccessCart from "./components/successCart";
+import AdminDashboard from "./components/Admin/AdminDashboard";
 
 // Fetch initial data
 store.dispatch(fetchProduct());
@@ -77,6 +78,10 @@ const router = createBrowserRouter([
         element: <SignUp />,
       },
     ],
+  },
+  {
+    path: "/admin",
+    element: <AdminDashboard />,
   },
 ]);
 
