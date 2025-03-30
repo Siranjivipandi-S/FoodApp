@@ -3,7 +3,7 @@ import scrolldown from "../assets/scrolldown.gif";
 function GreetComp() {
   function scrolltoDown() {
     window.scrollTo({
-      top: window.innerHeight - 100, // Scroll down to the next section
+      top: window.innerHeight - 100,
       behavior: "smooth",
     });
   }
@@ -13,7 +13,7 @@ function GreetComp() {
     <div className="absolute top-72 mt-10 h-[410px] w-[550px]">
       <div className="flex flex-col gap-5 ml-6">
         <h1 className="text-7xl title-gradient ml-3 select-none">
-          Foodify App
+          Food Ordering Application
         </h1>
         <h1 className="text-6xl greet-gradient ml-3 select-none">
           Welcome's You

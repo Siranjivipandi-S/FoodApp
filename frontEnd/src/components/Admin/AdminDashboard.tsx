@@ -27,9 +27,9 @@ const AdminDashboard: React.FC = () => {
       try {
         const res = await axios.get("http://localhost:5000/gettransaction");
         const data = res?.data;
-        setTransactions(data);
-        getWeeklyData(data);
-        getDailyData(data);
+        setTransactions(data?.transactions);
+        getWeeklyData(data?.transactions);
+        getDailyData(data?.transactions);
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
       }
@@ -64,7 +64,7 @@ const AdminDashboard: React.FC = () => {
   const getWeeklyData = (transactions) => {
     const weeklyData = {};
 
-    transactions.forEach((transaction) => {
+    transactions?.forEach((transaction) => {
       const date = new Date(transaction.createdAt);
       const year = date.getFullYear();
       const weekNumber = getWeekNumber(date);
@@ -159,7 +159,7 @@ const AdminDashboard: React.FC = () => {
       const lastMonthStart = new Date(today);
       lastMonthStart.setMonth(today.getMonth() - 1);
 
-      const lastMonthFiltered = transactions.filter((transaction) => {
+      const lastMonthFiltered = transactions?.filter((transaction) => {
         const createdAt = new Date(transaction.createdAt);
         return createdAt >= lastMonthStart && createdAt <= today;
       });
@@ -171,7 +171,7 @@ const AdminDashboard: React.FC = () => {
       const prevMonthEnd = new Date(lastMonthStart);
       prevMonthEnd.setDate(0); // Last day of the previous month
 
-      const prevMonthFiltered = transactions.filter((transaction) => {
+      const prevMonthFiltered = transactions?.filter((transaction) => {
         const createdAt = new Date(transaction.createdAt);
         return createdAt >= prevMonthStart && createdAt <= prevMonthEnd;
       });
@@ -187,8 +187,8 @@ const AdminDashboard: React.FC = () => {
     }
     // Count most purchased meals
     const mealCount = {};
-    transactions.forEach((transaction) => {
-      transaction.cartItems.forEach((item) => {
+    transactions?.forEach((transaction) => {
+      transaction.cartItems?.forEach((item) => {
         if (mealCount[item.mealName]) {
           mealCount[item.mealName] += item.quantity;
         } else {
@@ -244,7 +244,7 @@ const AdminDashboard: React.FC = () => {
           </div>
           <div className="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col gap-4 items-start justify-between">
             <div className="">
-              <h2 className="text-xl font-bold">Last Week Transactions</h2>
+              <h2 className="text-xl font-bold">Weekly Transactions</h2>
             </div>
             <div className="">
               <p>Total Transactions: {lastWeekTransactions.length}</p>
@@ -269,7 +269,7 @@ const AdminDashboard: React.FC = () => {
 
           <div className="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col items-start justify-between">
             <div className="">
-              <h2 className="text-xl font-bold">Last Month Transactions</h2>
+              <h2 className="text-xl font-bold">Monthly Transactions</h2>
             </div>
             <div className="">
               <p>Total Transactions: {lastMonthTransactions.length}</p>

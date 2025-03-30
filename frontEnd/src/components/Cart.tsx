@@ -134,7 +134,7 @@ function Cart() {
         <h1 className="text-5xl text-orange-400 text-center mt-8 hover:scale-105 transition-transform">
           Cart Section
         </h1>
-        <div className="flex h-full w-full mt-10 mb-10 flex items-start justify-center">
+        <div className="flex h-full w-full mt-10 mb-10  items-start justify-center">
           <div className="flex w-full items-start justify-around">
             <div className="grid grid-cols-3 sm:grid-cols-2 md:grid-cols-3 w-full gap-2 ml-8">
               {Carts && Carts.length > 0 ? (

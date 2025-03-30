@@ -22,6 +22,8 @@ import {
 import ProtectedRoute from "./components/Authentication/ProtectedRoute";
 import SuccessCart from "./components/successCart";
 import AdminDashboard from "./components/Admin/AdminDashboard";
+import OrderTracking from "./components/Admin/OrderTracking";
+import MyOrderTracking from "./components/MyOrder";
 
 // Fetch initial data
 store.dispatch(fetchProduct());
@@ -82,6 +84,14 @@ const router = createBrowserRouter([
   {
     path: "/admin",
     element: <AdminDashboard />,
+  },
+  {
+    path: "/orderTrack",
+    element: <OrderTracking />,
+  },
+  {
+    path: "/MyOrders",
+    element: <MyOrderTracking />,
   },
 ]);
 

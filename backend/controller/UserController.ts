@@ -44,6 +44,7 @@ const DeleteItemfromCart = asyncHandler(
     if (!id) {
       return res.status(400).json({ message: "Id is mandatory" });
     }
+
     try {
       const response = await CartModel.findByIdAndDelete(id);
       if (!response) {

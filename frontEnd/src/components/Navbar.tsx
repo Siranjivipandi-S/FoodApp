@@ -31,7 +31,7 @@ function Navbar() {
           to={"/"}
           className="text-2xl text-green-400 flex gap-2 items-center cursor-pointer"
         >
-          FoodifyProject
+          Food App
           <FaCartShopping
             size={25}
             color="white"
@@ -49,15 +49,36 @@ function Navbar() {
               Home
             </Link>
           </li>
-          {showDashborad && (
-            <li>
-              <Link
-                to={"/admin"}
-                className="font-sans p-2 text-lg text-white hover:text-orange-300 rounded-lg"
-              >
-                Dashboard
-              </Link>
-            </li>
+          {showDashborad ? (
+            <>
+              <li>
+                <Link
+                  to={"/admin"}
+                  className="font-sans p-2 text-lg text-white hover:text-orange-300 rounded-lg"
+                >
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to={"/orderTrack"}
+                  className="font-sans p-2 text-lg text-white hover:text-orange-300 rounded-lg"
+                >
+                  Order Tracking
+                </Link>
+              </li>
+            </>
+          ) : (
+            <>
+              <li>
+                <Link
+                  to={"/MyOrders"}
+                  className="font-sans p-2 text-lg text-white hover:text-orange-300 rounded-lg"
+                >
+                  My Orders
+                </Link>
+              </li>
+            </>
           )}
           {userExists ? (
             <li>

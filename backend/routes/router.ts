@@ -14,7 +14,11 @@ const {
   stripeWebhookHandler,
 } = require("../controller/CartCheckout");
 const { signupUser, loginUser } = require("../controller/LoginController");
-const { allTransaction } = require("../controller/AdminDashboard");
+const {
+  allTransaction,
+  OrderTransaction,
+  GetUserOrderTransaction,
+} = require("../controller/AdminDashboard");
 
 router.post("/login", loginUser);
 router.post("/signup", signupUser);
@@ -23,6 +27,8 @@ router.delete("/deleteCart/:id", DeleteItemfromCart);
 router.post("/checkout", checkoutCart);
 router.get("/getKey", getPublishablekey);
 router.get("/gettransaction", allTransaction);
+router.get("/Ordertransaction", OrderTransaction);
+router.get("/MyOrders", GetUserOrderTransaction);
 router.post("/recommendproduct", recommendProducts);
 router.post(
   "/webhook",
