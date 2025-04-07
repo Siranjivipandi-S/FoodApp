@@ -104,11 +104,11 @@ const MyOrderTracking = () => {
   return (
     <div className="w-full mx-auto p-6 relative bg-slate-800 text-white min-h-screen">
       <Navbar />
-      <div className="max-w-7xl mx-auto p-4">
+      <div className="max-w-full mx-auto p-4">
         <div className="flex items-start justify-start gap-4 mt-20">
           <Package className="w-10 h-10 mr-3 mt-5" />
           <h1 className="text-4xl font-bold text-center mt-5 text-orange-400">
-            Order Tracking
+            My Orders
           </h1>
         </div>
 

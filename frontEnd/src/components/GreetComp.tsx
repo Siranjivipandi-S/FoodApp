@@ -15,12 +15,10 @@ function GreetComp() {
         <h1 className="text-7xl title-gradient ml-3 select-none">
           Food Ordering Application
         </h1>
-        <h1 className="text-6xl greet-gradient ml-3 select-none">
-          Welcome's You
-        </h1>
+
         {user && (
           <h1 className="text-6xl ml-3 p-2 text-gradient selection:bg-orange-300 selection:text-white">
-            {user}!
+            Hey {user.slice(0, 1).toUpperCase() + user.slice(1)}!
           </h1>
         )}
 

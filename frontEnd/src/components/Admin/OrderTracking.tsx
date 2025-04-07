@@ -7,7 +7,6 @@ import {
   Clock,
   User,
   Mail,
-  DollarSign,
   Calendar,
   IndianRupee,
 } from "lucide-react";

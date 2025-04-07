@@ -15,6 +15,8 @@ const TokenSlice = createSlice({
     removeToken: (state, action) => {
       localStorage.removeItem("token");
       localStorage.removeItem("user");
+      localStorage.removeItem("suggestions");
+      localStorage.setItem("shownSuggestion", "false");
       window.location.reload();
     },
   },

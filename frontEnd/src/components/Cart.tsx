@@ -24,11 +24,13 @@ function Cart() {
   const Carts = useSelector((state: ProductsCart[]) =>
     selectAllCartItems(state)
   );
+  console.log(Carts, "Carts");
+
   useEffect(() => {
     if (Carts.length > 0) {
       getRecommendedProduct();
     }
-  }, [Carts]);
+  }, []);
   const dispatch = useDispatch();
   const [publishableKey, setPublishableKey] = useState("");
 

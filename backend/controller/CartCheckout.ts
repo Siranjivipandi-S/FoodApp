@@ -26,7 +26,6 @@ const recommendProducts = asyncHandler(async (req: Request, res: Response) => {
   try {
     const { cart } = req.body;
     const cartData = cart?.Carts;
-    console.log(cartData, "cart");
 
     // Validate cart input
     if (!cart || cart.length === 0) {
@@ -123,6 +122,108 @@ const recommendProducts = asyncHandler(async (req: Request, res: Response) => {
     }
   }
 });
+const recommendUserLikedProducts = asyncHandler(
+  async (req: Request, res: Response) => {
+    try {
+      const { cart } = req.body;
+      const cartData = cart?.Carts;
+
+      // Validate cart input
+      if (!cart || cart.length === 0) {
+        return res.status(400).json({ message: "Cart is empty" });
+      }
+
+      // Fetch products from MongoDB
+      const products = await MealDb.find();
+
+      // Resolve the path to the Python script
+      const pythonScript = path.resolve(
+        __filename,
+        "../../src/python/userproducts.py"
+      );
+
+      const formattedPath = pythonScript.replace(/\\/g, "/");
+      console.log(formattedPath, "formated");
+
+      // Spawn the Python process
+      const python = spawn("python", [formattedPath]);
+
+      // Prepare input data for the Python script
+      const inputData = JSON.stringify({ cart: cartData, products });
+      // console.log("Input Data to Python:", inputData);
+
+      // Send data to the Python script
+      python.stdin.write(inputData);
+      python.stdin.end();
+
+      let data = "";
+      let errorData = "";
+
+      // Capture stdout (data) from the Python script
+      python.stdout.on("data", (chunk) => {
+        data += chunk.toString();
+        console.log("Raw Python Output:", chunk.toString()); // Log raw output
+      });
+
+      // Capture stderr (errors) from the Python script
+      python.stderr.on("data", (chunk) => {
+        errorData += chunk.toString();
+        console.error("Python Error Output:", chunk.toString()); // Log Python errors
+      });
+
+      // Handle the Python process completion
+      python.on("close", (code) => {
+        if (code === 0) {
+          try {
+            // Validate that data is not empty
+            if (!data) {
+              throw new Error("No data received from Python script");
+            }
+
+            // Parse the JSON output from the Python script
+            const recommendations = JSON.parse(data);
+            console.log(data, "Recommendations");
+
+            // Send the recommendations back to the client
+            res.json(recommendations);
+          } catch (jsonError) {
+            console.error("JSON Parse  Error:", jsonError);
+            console.error("Raw Data:", data); // Log the raw data that caused the error
+            if (jsonError instanceof Error) {
+              res.status(500).json({
+                message: "Failed to parse recommendations",
+                error: jsonError.message,
+              });
+            } else {
+              res.status(500).json({
+                message: "Failed to parse recommendations",
+                error: "An unknown error occurred",
+              });
+            }
+          }
+        } else {
+          // Handle Python script errors
+          console.error("Python Error:", errorData);
+          res.status(500).json({
+            message: "Python process failed",
+            error: errorData,
+          });
+        }
+      });
+    } catch (error: unknown) {
+      // Handle unexpected errors in the Node.js controller
+      if (error instanceof Error) {
+        res.status(500).json({
+          message: `Failed to fetch products: ${error.message}`,
+        });
+      } else {
+        res.status(500).json({
+          message: "An unknown error occurred while fetching products.",
+        });
+      }
+    }
+  }
+);
 
 const getPublishablekey = asyncHandler(async (req: Request, res: Response) => {
   try {
@@ -241,4 +342,5 @@ export {
   getPublishablekey,
   stripeWebhookHandler,
   recommendProducts,
+  recommendUserLikedProducts,
 };

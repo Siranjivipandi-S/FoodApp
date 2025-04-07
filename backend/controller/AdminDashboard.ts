@@ -90,5 +90,83 @@ const GetUserOrderTransaction = async (
     next(error);
   }
 };
+const GetUserOrderTransactionCount = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userMail: string = req.query.email as string;
 
-export { allTransaction, OrderTransaction, GetUserOrderTransaction };
+    // Check if userMail is provided
+    if (!userMail) {
+      return res.status(400).json({ message: "Email is required" });
+    }
+
+    // Find the transactions for the specified user
+    const transactions = await CartCheckout.find({
+      email: userMail,
+    });
+
+    // Count total transactions for the user
+    const totalItems = await CartCheckout.countDocuments({
+      email: userMail,
+    });
+
+    // Return transactions and count (even if zero)
+    return res.status(200).json({
+      transactions,
+      totalItems,
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+const GetUserOrderProducts = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userMail: string = req.query.email as string; // Corrected to get the email
+
+    // Check if userMail is provided
+    if (!userMail) {
+      return res.status(400).json({ message: "Email is required" }); // Send response if email is missing
+    }
+
+    // Find the transactions for the specified user with pagination and sorting by creation date (most recent first)
+    const transactions = await CartCheckout.find({
+      email: userMail,
+    });
+
+    // If no transactions found, send an appropriate message
+    if (transactions.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "No transactions found for this user." });
+    }
+
+    // Find the total number of transactions to calculate total pages
+    const totalItems = await CartCheckout.countDocuments({
+      email: userMail,
+    });
+
+    // Send response with paginated data and totalItems for pagination calculation
+    return res.status(200).json({
+      transactions,
+      totalItems,
+    });
+  } catch (error: any) {
+    next(error);
+  }
+};
+
+export {
+  allTransaction,
+  OrderTransaction,
+  GetUserOrderTransaction,
+  GetUserOrderProducts,
+  GetUserOrderTransactionCount,
+};

@@ -16,6 +16,7 @@ const store = configureStore({
     login: loginslice,
     token: TokenSlice,
     recommendproduct: productslice.recommendproduct,
+    UserLikedProduct: productslice.UserLikedProduct,
     transactions: transactionSlice,
   },
 });

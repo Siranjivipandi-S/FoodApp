@@ -13,7 +13,6 @@ function Navbar() {
   const userExists = localStorage.getItem("token");
   const userMail = localStorage.getItem("useremail");
   const showDashborad = userMail == "siranjivi@gmail.com";
-  console.log(showDashborad, "Access");
 
   useEffect(() => {
     setAnimate(true);
