@@ -1,21 +1,16 @@
 import { useDispatch, useSelector } from "react-redux";
-import { fetchSeeFood, selectAllSeeFoods } from "../../Redux/Productslice";
-import { RootState } from "../../Redux/store";
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
-import { FaCartShopping } from "react-icons/fa6";
-import { ProductsCart } from "./BreakFast";
+
 import { AddtoCart } from "../../Redux/CartSlice";
 import toast from "react-hot-toast";
+import FoodCard from "../FoodCard";
+import { selectAllSeeFoods } from "../../Redux/Productslice";
 
-function MeatCategory() {
+// Seafood Component
+export default function MeatCategory() {
   const dispatch = useDispatch();
   const seefood = useSelector((state: RootState) => selectAllSeeFoods(state));
 
-  useEffect(() => {
-    dispatch(fetchSeeFood());
-  }, [dispatch]);
-  const CartEvent = async (product: ProductsCart) => {
+  const CartEvent = async (product) => {
     try {
       await dispatch(
         AddtoCart({
@@ -27,53 +22,42 @@ function MeatCategory() {
         })
       );
 
-      toast.success("Add to Cart");
+      toast.success("Seafood added to cart!", {
+        icon: "🦞",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong");
     }
   };
 
   return (
-    <>
+    <div>
+      <h2 className="text-3xl font-bold mb-6 text-slate-300 border-b pb-2">
+        Fresh Seafood Selection
+      </h2>
+
       {seefood && seefood.length > 0 ? (
-        seefood.map((item) => (
-          <div
-            className="bg-slate-800 h-[360px] w-[300px] mb-3 rounded-xl relative shadow-lg overflow-hidden"
-            key={item.idMeal}
-          >
-            <div className="absolute bg-pink-50 h-[200px] w-[370px] rounded-bl-full -left-14">
-              <div className="flex items-center justify-center mt-2">
-                <img
-                  src={item.strMealThumb}
-                  alt={item.strMeal}
-                  className="ml-5 rounded-full h-44 w-52 hover:scale-110 transition-transform select-none"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col z-20 mt-56 ml-4 gap-4">
-              <h2 className="text-2xl text-green-300 select-none">
-                {item.strMeal}
-              </h2>
-              <div className="flex items-center justify-between">
-                <p className="text-lg text-white select-none">
-                  Rs. {item.price}
-                </p>
-                <Link
-                  onClick={() => CartEvent(item)}
-                  className="select-none flex font-medium items-center gap-2 mr-5 bg-orange-400 rounded-full p-2 hover:bg-orange-300 hover:scale-105 transition-transform"
-                >
-                  Add Cart
-                  <FaCartShopping size={20} color="white" />
-                </Link>
-              </div>
-            </div>
-          </div>
-        ))
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {seefood.map((item) => (
+            <FoodCard
+              key={item.idMeal}
+              product={{ ...item, rating: (Math.random() * 2 + 3).toFixed(1) }}
+              onAddToCart={CartEvent}
+            />
+          ))}
+        </div>
       ) : (
-        <p className="text-4xl text-center">Loading...</p>
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-orange-500 mb-4"></div>
+          <p className="text-gray-500">Fishing for seafood options...</p>
+        </div>
       )}
-    </>
+    </div>
   );
 }
-
-export default MeatCategory;

@@ -6,43 +6,67 @@ import axios from "axios";
 import AdminBarWeekklyChart from "./BarChart";
 import { MDBIcon } from "mdb-react-ui-kit";
 import "../../index.css";
-import { FaArrowDown91 } from "react-icons/fa6";
-import { FaSortNumericUp } from "react-icons/fa";
+import {
+  FaArrowDown,
+  FaArrowUp,
+  FaChartLine,
+  FaUsers,
+  FaCalendarAlt,
+  FaDatabase,
+  FaUtensilSpoon,
+} from "react-icons/fa";
 import DoughnutChart from "./PieChart";
 import LineChart from "./LineChart";
+
 const AdminDashboard: React.FC = () => {
   const [lastWeekTransactions, setLastWeekTransactions] = useState([]);
   const [lastMonthTransactions, setLastMonthTransactions] = useState([]);
   const [mostPurchasedMeals, setMostPurchasedMeals] = useState({});
-  const [transactions, setTransactions] = useState([]); // Adjust based on your state structure
+  const [transactions, setTransactions] = useState([]);
   const [todayTransactions, setTodayTransactions] = useState([]);
-  const [prevDay, SetPrevDay] = useState("");
+  const [prevDay, setPrevDay] = useState("");
   const [weeklyData, setWeeklyData] = useState({ labels: [], data: [] });
-  const [DailyData, setDailyData] = useState({ labels: [], data: [] });
-  const [prevWeek, SetPrevWeek] = useState("");
-  const [prevMonth, SetPrevMonth] = useState("");
+  const [dailyData, setDailyData] = useState({ labels: [], data: [] });
+  const [prevWeek, setPrevWeek] = useState("");
+  const [prevMonth, setPrevMonth] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("overview");
+  const [totalRevenue, setTotalRevenue] = useState(0);
+  const [totalOrders, setTotalOrders] = useState(0);
 
   useEffect(() => {
     const getTransactionData = async () => {
+      setIsLoading(true);
       try {
         const res = await axios.get("http://localhost:5000/gettransaction");
         const data = res?.data;
         setTransactions(data?.transactions);
         getWeeklyData(data?.transactions);
         getDailyData(data?.transactions);
+
+        // Calculate overall metrics
+        setTotalOrders(data?.transactions.length);
+        const revenue = data?.transactions.reduce(
+          (total, tx) => total + tx.totalprice,
+          0
+        );
+        setTotalRevenue(revenue);
+
+        setIsLoading(false);
       } catch (error) {
         console.error("Failed to fetch transactions:", error);
+        setIsLoading(false);
       }
     };
     getTransactionData();
   }, []);
-  console.log(DailyData, "Daily Data");
 
   const getWeekNumber = (date) => {
     const startDate = new Date(date.getFullYear(), 0, 1);
     const days = Math.floor((date - startDate) / (24 * 60 * 60 * 1000));
     return Math.ceil((days + startDate.getDay() + 1) / 7);
   };
+
   const getDailyData = (transactions) => {
     const dailyData = {};
 
@@ -56,8 +80,11 @@ const AdminDashboard: React.FC = () => {
       dailyData[date] += transaction.totalprice; // Sum total price for the day
     });
 
-    const labels = Object.keys(dailyData);
-    const data = Object.values(dailyData);
+    // Sort dates chronologically
+    const sortedDates = Object.keys(dailyData).sort();
+    const labels = sortedDates;
+    const data = sortedDates.map((date) => dailyData[date]);
+
     setDailyData({ labels, data });
   };
 
@@ -77,8 +104,11 @@ const AdminDashboard: React.FC = () => {
       weeklyData[weekKey] += transaction.totalprice; // Sum the total price for the week
     });
 
-    const labels = Object.keys(weeklyData);
-    const data = Object.values(weeklyData);
+    // Sort weeks chronologically
+    const sortedWeeks = Object.keys(weeklyData).sort();
+    const labels = sortedWeeks;
+    const data = sortedWeeks.map((week) => weeklyData[week]);
+
     setWeeklyData({ labels, data });
   };
 
@@ -123,7 +153,7 @@ const AdminDashboard: React.FC = () => {
         todayTotal,
         prevDayTotal
       );
-      SetPrevDay(todayPercentageChange.toFixed(2));
+      setPrevDay(todayPercentageChange.toFixed(2));
 
       // --- Filter transactions for the last week ---
       const lastWeekStart = new Date(today);
@@ -153,7 +183,7 @@ const AdminDashboard: React.FC = () => {
         lastWeekTotal,
         prevWeekTotal
       );
-      SetPrevWeek(weeklyPercentageChange.toFixed(2));
+      setPrevWeek(weeklyPercentageChange.toFixed(2));
 
       // --- Filter transactions for the last month ---
       const lastMonthStart = new Date(today);
@@ -183,8 +213,9 @@ const AdminDashboard: React.FC = () => {
         lastMonthTotal,
         prevMonthTotal
       );
-      SetPrevMonth(monthlyPercentageChange);
+      setPrevMonth(monthlyPercentageChange.toFixed(2));
     }
+
     // Count most purchased meals
     const mealCount = {};
     transactions?.forEach((transaction) => {
@@ -199,137 +230,298 @@ const AdminDashboard: React.FC = () => {
     setMostPurchasedMeals(mealCount);
   }, [transactions]);
 
-  // Calculate total amount for last week and last month
+  // Calculate total amount for transactions
   const calculateTotal = (transactions) => {
     return transactions.reduce(
       (total, transaction) => total + transaction.totalprice,
       0
     );
   };
-  return (
-    <div className="flex flex-col min-h-screen bg-slate-900">
-      <Navbar />
-      <Toaster />
-      <div className="flex flex-col mt-20 p-5">
-        <h1 className="text-4xl text-orange-400 text-start hover:scale-105 transition-transform">
-          Admin Dashboard
-        </h1>
 
-        <div className="grid grid-cols-3 gap-4 text-white mt-5 mb-10">
-          <div className="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col items-start justify-between">
-            <div className="">
-              <h2 className="text-xl font-bold">
-                <MDBIcon fas icon="money-check-alt" />
-                Today's Transactions
+  // Format currency
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
+    }).format(amount);
+  };
+
+  // Format date for display
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
+  // Get current date and time
+  const currentDate = new Date().toLocaleDateString("en-IN", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  const currentTime = new Date().toLocaleTimeString("en-IN", {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+
+  return (
+    <div className="flex flex-col min-h-screen bg-gradient-to-br from-slate-950 to-slate-900">
+      <Navbar />
+      <Toaster position="top-right" />
+
+      {isLoading ? (
+        <div className="flex items-center justify-center h-screen">
+          <div className="flex flex-col items-center">
+            <div className="w-16 h-16 border-t-4 border-b-4 border-orange-500 rounded-full animate-spin"></div>
+            <p className="mt-4 text-white text-xl">Loading dashboard data...</p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex flex-col mt-20 p-5 lg:p-8">
+          {/* Header with greeting and date */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+            <div>
+              <h1 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                <span className="bg-gradient-to-r from-orange-400 to-red-500 text-transparent bg-clip-text">
+                  Admin Dashboard
+                </span>
+              </h1>
+              <p className="text-slate-400">
+                {currentDate} • {currentTime}
+              </p>
+            </div>
+
+            {/* <div className="mt-4 md:mt-0 flex space-x-2">
+              <button className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg flex items-center">
+                <FaDatabase className="mr-2" /> Export Data
+              </button>
+              <button className="bg-slate-700 hover:bg-slate-600 text-white px-4 py-2 rounded-lg font-medium transition-all duration-300 shadow-lg flex items-center">
+                <FaUsers className="mr-2" /> Manage Users
+              </button>
+            </div> */}
+          </div>
+
+          {/* Navigation tabs */}
+          {/* <div className="flex mb-6 bg-slate-800 rounded-xl p-1 w-fit">
+            <button
+              onClick={() => setActiveTab("overview")}
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                activeTab === "overview"
+                  ? "bg-gradient-to-r from-orange-500 to-red-500 text-white"
+                  : "text-slate-300 hover:text-white"
+              }`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => setActiveTab("orders")}
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                activeTab === "orders"
+                  ? "bg-gradient-to-r from-orange-500 to-red-500 text-white"
+                  : "text-slate-300 hover:text-white"
+              }`}
+            >
+              Orders
+            </button>
+            <button
+              onClick={() => setActiveTab("analytics")}
+              className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+                activeTab === "analytics"
+                  ? "bg-gradient-to-r from-orange-500 to-red-500 text-white"
+                  : "text-slate-300 hover:text-white"
+              }`}
+            >
+              Analytics
+            </button>
+          </div> */}
+
+          {/* KPI Summary Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            {/* Total Revenue Card */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg p-6 border border-slate-700 hover:border-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <p className="text-slate-400 text-sm font-medium">
+                    Total Revenue
+                  </p>
+                  <h3 className="text-3xl font-bold text-white mt-1">
+                    {formatCurrency(totalRevenue)}
+                  </h3>
+                </div>
+                <div className="bg-orange-500/20 p-3 rounded-lg">
+                  <FaChartLine className="text-orange-500 text-xl" />
+                </div>
+              </div>
+              <div className="flex items-center text-sm">
+                <span
+                  className={`flex items-center ${
+                    prevMonth >= 0 ? "text-green-400" : "text-red-400"
+                  }`}
+                >
+                  {prevMonth >= 0 ? (
+                    <FaArrowUp className="mr-1" />
+                  ) : (
+                    <FaArrowDown className="mr-1" />
+                  )}
+                  {Math.abs(prevMonth).toFixed(1)}%
+                </span>
+                <span className="text-slate-400 ml-2">vs. last month</span>
+              </div>
+            </div>
+
+            {/* Today's Transactions Card */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg p-6 border border-slate-700 hover:border-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <p className="text-slate-400 text-sm font-medium">
+                    Today's Sales
+                  </p>
+                  <h3 className="text-3xl font-bold text-white mt-1">
+                    {formatCurrency(calculateTotal(todayTransactions))}
+                  </h3>
+                </div>
+                <div className="bg-teal-500/20 p-3 rounded-lg">
+                  <FaCalendarAlt className="text-teal-500 text-xl" />
+                </div>
+              </div>
+              <div className="flex items-center text-sm">
+                <span
+                  className={`flex items-center ${
+                    prevDay >= 0 ? "text-green-400" : "text-red-400"
+                  }`}
+                >
+                  {prevDay >= 0 ? (
+                    <FaArrowUp className="mr-1" />
+                  ) : (
+                    <FaArrowDown className="mr-1" />
+                  )}
+                  {Math.abs(parseFloat(prevDay)).toFixed(1)}%
+                </span>
+                <span className="text-slate-400 ml-2">vs. yesterday</span>
+              </div>
+            </div>
+
+            {/* Weekly Transactions Card */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg p-6 border border-slate-700 hover:border-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <p className="text-slate-400 text-sm font-medium">
+                    Weekly Sales
+                  </p>
+                  <h3 className="text-3xl font-bold text-white mt-1">
+                    {formatCurrency(calculateTotal(lastWeekTransactions))}
+                  </h3>
+                </div>
+                <div className="bg-purple-500/20 p-3 rounded-lg">
+                  <FaChartLine className="text-purple-500 text-xl" />
+                </div>
+              </div>
+              <div className="flex items-center text-sm">
+                <span
+                  className={`flex items-center ${
+                    prevWeek >= 0 ? "text-green-400" : "text-red-400"
+                  }`}
+                >
+                  {prevWeek >= 0 ? (
+                    <FaArrowUp className="mr-1" />
+                  ) : (
+                    <FaArrowDown className="mr-1" />
+                  )}
+                  {Math.abs(parseFloat(prevWeek)).toFixed(1)}%
+                </span>
+                <span className="text-slate-400 ml-2">vs. last week</span>
+              </div>
+            </div>
+
+            {/* Total Orders Card */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl shadow-lg p-6 border border-slate-700 hover:border-orange-500/30 transition-all duration-300 transform hover:-translate-y-1">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <p className="text-slate-400 text-sm font-medium">
+                    Total Orders
+                  </p>
+                  <h3 className="text-3xl font-bold text-white mt-1">
+                    {totalOrders}
+                  </h3>
+                </div>
+                <div className="bg-blue-500/20 p-3 rounded-lg">
+                  <FaUtensilSpoon className="text-blue-500 text-xl" />
+                </div>
+              </div>
+              <div className="flex items-center text-sm">
+                <span className="text-slate-400">Lifetime orders</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Charts and Tables Section */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+            {/* Weekly Revenue Chart */}
+            <div className="lg:col-span-2 bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 shadow-lg border border-slate-700">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-white">Weekly Revenue</h2>
+                {/* <div className="flex bg-slate-700 rounded-lg p-1">
+                  <button className="px-3 py-1 text-sm rounded-md bg-orange-500 text-white">
+                    Week
+                  </button>
+                  <button className="px-3 py-1 text-sm rounded-md text-slate-400 hover:text-white">
+                    Month
+                  </button>
+                  <button className="px-3 py-1 text-sm rounded-md text-slate-400 hover:text-white">
+                    Year
+                  </button>
+                </div> */}
+              </div>
+              <div className="h-64">
+                <AdminBarWeekklyChart
+                  labels={weeklyData.labels}
+                  data={weeklyData.data}
+                />
+              </div>
+            </div>
+
+            {/* Top Selling Items */}
+            <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 shadow-lg border border-slate-700">
+              <h2 className="text-xl font-bold text-white mb-6">
+                Top Products
+              </h2>
+              <div className="h-64 flex items-center justify-center">
+                <DoughnutChart datas={mostPurchasedMeals} />
+              </div>
+            </div>
+          </div>
+
+          {/* Daily Revenue Chart */}
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 shadow-lg border border-slate-700 mb-8">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-white">
+                Daily Revenue Trend
               </h2>
             </div>
-            <div className="">
-              <p>Total Transactions: {todayTransactions.length}</p>
-              <p>
-                Total Amount: ₹ {calculateTotal(todayTransactions).toFixed(2)}
-              </p>
-              <p
-                className={`flex items-center gap-1 ${
-                  prevDay >= 0 ? "text-green-400" : "text-red-500"
-                }`}
-              >
-                {prevDay >= 0 ? (
-                  <FaSortNumericUp color="green" />
-                ) : (
-                  <FaArrowDown91 color="red" />
-                )}
-                {prevDay}%
-              </p>
-            </div>
-          </div>
-          <div className="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col gap-4 items-start justify-between">
-            <div className="">
-              <h2 className="text-xl font-bold">Weekly Transactions</h2>
-            </div>
-            <div className="">
-              <p>Total Transactions: {lastWeekTransactions.length}</p>
-              <p>
-                Total Amount: ₹{" "}
-                {calculateTotal(lastWeekTransactions).toFixed(2)}
-              </p>
-              <p
-                className={`flex items-center gap-1 ${
-                  prevWeek >= 0 ? "text-green-400" : "text-red-500"
-                }`}
-              >
-                {prevWeek >= 0 ? (
-                  <FaSortNumericUp color="green" />
-                ) : (
-                  <FaArrowDown91 color="red" />
-                )}
-                {prevWeek}%
-              </p>
+            <div className="h-64">
+              <LineChart label={dailyData.labels} datas={dailyData.data} />
             </div>
           </div>
 
-          <div className="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col items-start justify-between">
-            <div className="">
-              <h2 className="text-xl font-bold">Monthly Transactions</h2>
+          {/* Recent Transactions Table */}
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl p-6 shadow-lg border border-slate-700">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-xl font-bold text-white">
+                Recent Transactions
+              </h2>
             </div>
-            <div className="">
-              <p>Total Transactions: {lastMonthTransactions.length}</p>
-              <p>
-                Total Amount: ₹{" "}
-                {calculateTotal(lastMonthTransactions).toFixed(2)}
-              </p>
-              <p
-                className={`flex items-center gap-1 ${
-                  prevMonth >= 0 ? "text-green-400" : "text-red-400"
-                }`}
-              >
-                {prevMonth >= 0 ? (
-                  <FaSortNumericUp color="green" />
-                ) : (
-                  <FaArrowDown91 color="red" />
-                )}
-                {prevMonth}%
-              </p>
+            <div className="overflow-x-auto">
+              <AdminListTable transactions={transactions} />
             </div>
-          </div>
-          {/* <div className="bg-gray-800 p-4 rounded-lg shadow-lg flex flex-col items-start justify-between">
-            <div className="">
-              <h2 className="text-xl font-bold">Most Purchased Meals</h2>
-            </div>
-            <div className="flex">
-              <ul>
-                {Object.entries(mostPurchasedMeals)
-                  .sort(([, countA], [, countB]) => countB - countA) // Sort by count in descending order
-                  .slice(0, 3) // Take the top 3
-                  .map(([mealName, count]) => (
-                    <li key={mealName}>
-                      {mealName}: {count} times,
-                    </li>
-                  ))}
-              </ul>
-            </div>
-          </div> */}
-        </div>
-
-        <div className="flex items-center justify-between gap-5">
-          <div className="">
-            <AdminListTable transactions={transactions} />
-          </div>
-          <div className="barchat-css">
-            <AdminBarWeekklyChart
-              labels={weeklyData.labels}
-              data={weeklyData.data}
-            />
           </div>
         </div>
-        <div className="flex items-center justify-between gap-5 mt-5">
-          <div className="barchat-css">
-            <LineChart label={DailyData.labels} datas={DailyData.data} />
-          </div>
-          <div className="barchat-css-pie">
-            <DoughnutChart datas={mostPurchasedMeals} />
-          </div>
-        </div>
-      </div>
+      )}
     </div>
   );
 };

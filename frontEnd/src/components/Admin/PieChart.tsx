@@ -28,12 +28,33 @@ const DoughnutChart = ({ datas }) => {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "right",
+        labels: {
+          color: "white",
+          font: {
+            size: 12,
+          },
+        },
+      },
+      title: {
+        display: false,
+      },
+    },
+    // Makes the chart take up more available space within its container
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 10,
+        bottom: 10,
+      },
+    },
   };
 
   return (
-    <div className="pie-chart">
-      <h1 className="text-start text-2xl font-bold">Top-Selling Product</h1>
-
+    <div className="pie-chart" style={{ height: "300px", width: "100%" }}>
       <Doughnut data={data} options={options} />
     </div>
   );

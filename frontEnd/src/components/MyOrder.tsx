@@ -102,7 +102,7 @@ const MyOrderTracking = () => {
   }
 
   return (
-    <div className="w-full mx-auto p-6 relative bg-slate-800 text-white min-h-screen">
+    <div className="w-full mx-auto  relative bg-slate-800 text-white min-h-screen">
       <Navbar />
       <div className="max-w-full mx-auto p-4">
         <div className="flex items-start justify-start gap-4 mt-20">

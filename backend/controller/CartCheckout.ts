@@ -81,7 +81,6 @@ const recommendProducts = asyncHandler(async (req: Request, res: Response) => {
 
           // Parse the JSON output from the Python script
           const recommendations = JSON.parse(data);
-          console.log(recommendations, "Recommendations");
 
           // Send the recommendations back to the client
           res.json(recommendations);
@@ -182,7 +181,6 @@ const recommendUserLikedProducts = asyncHandler(
 
             // Parse the JSON output from the Python script
             const recommendations = JSON.parse(data);
-            console.log(data, "Recommendations");
 
             // Send the recommendations back to the client
             res.json(recommendations);

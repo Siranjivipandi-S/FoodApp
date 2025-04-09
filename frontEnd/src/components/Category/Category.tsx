@@ -1,12 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import { selectAllProducts } from "../../Redux/Productslice";
 import { Product } from "../../Redux/Productslice";
-import { Link, useNavigate } from "react-router-dom";
-import { FaCartShopping } from "react-icons/fa6";
+import { useNavigate } from "react-router-dom";
 import { RootState } from "@reduxjs/toolkit/query";
-import { ProductsCart } from "./BreakFast";
 import { AddtoCart } from "../../Redux/CartSlice";
 import toast from "react-hot-toast";
+import FoodCard from "../FoodCard";
 
 function AllCategory() {
   const Getproducts = useSelector((state: RootState) =>
@@ -14,7 +13,8 @@ function AllCategory() {
   ) as Product[];
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const CartEvent = async (product: ProductsCart) => {
+
+  const CartEvent = async (product) => {
     try {
       await dispatch(
         AddtoCart({
@@ -26,55 +26,61 @@ function AllCategory() {
         })
       );
 
-      toast.success("Add to Cart");
+      toast.success("Added to your cart!", {
+        icon: "🛒",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
     } catch (error) {
-      toast.error("Login to Continue");
+      toast.error("Please login to continue", {
+        icon: "🔒",
+        style: {
+          borderRadius: "10px",
+          background: "#333",
+          color: "#fff",
+        },
+      });
       navigate("/Landing/Login");
-      console.log(error);
     }
   };
-  return (
-    <>
-      {Getproducts && Getproducts.length > 0
-        ? Getproducts.map((product) => (
-            <div
-              className="bg-slate-800 h-full w-[300px] mb-3 rounded-xl relative shadow-lg overflow-hidden"
-              key={product.idCategory}
-            >
-              <div className="absolute bg-pink-50 h-[200px] w-[370px] rounded-bl-full -left-14">
-                <div className="flex items-center justify-center mt-2 ml-5">
-                  <img
-                    src={product.strCategoryThumb}
-                    alt={product.strCategory}
-                    className="ml-5 rounded-full h-44 w-52 hover:scale-110 transition-transform select-none"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col z-20 mt-56 ml-4 gap-4">
-                <h2 className="text-2xl text-green-300 select-none">
-                  {product.strCategory}
-                </h2>
-                <p className="text-white select-none mr-2">
-                  {`${product.strCategoryDescription.slice(0, 120)}..`}
-                </p>
 
-                <div className="flex items-center justify-between">
-                  <p className="text-lg text-white select-none">
-                    Rs. {product.price}
-                  </p>
-                  <Link
-                    onClick={() => CartEvent(product)}
-                    className="select-none flex font-medium items-center gap-2 mr-5 bg-orange-400 rounded-full p-2 hover:bg-orange-300 hover:scale-105 transition-transform"
-                  >
-                    Add Cart
-                    <FaCartShopping size={20} color="white" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))
-        : null}
-    </>
+  return (
+    <div>
+      <div className="flex items-center justify-between mb-6">
+        <h2 className="text-3xl font-bold text-slate-300">All Categories</h2>
+        <div className="flex gap-2">
+          {/* <button className="bg-white shadow px-4 py-2 rounded-full text-gray-800 hover:bg-gray-100">
+            Filter
+          </button>
+          <button className="bg-white shadow px-4 py-2 rounded-full text-gray-800 hover:bg-gray-100">
+            Sort
+          </button> */}
+        </div>
+      </div>
+
+      {Getproducts && Getproducts.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Getproducts.map((product) => (
+            <FoodCard
+              key={product.idCategory}
+              product={{
+                ...product,
+                rating: (Math.random() * 2 + 3).toFixed(1),
+              }}
+              onAddToCart={CartEvent}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-orange-500 mb-4"></div>
+          <p className="text-gray-500">Setting the table...</p>
+        </div>
+      )}
+    </div>
   );
 }
 

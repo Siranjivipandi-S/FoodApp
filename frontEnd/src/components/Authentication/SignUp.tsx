@@ -1,28 +1,33 @@
+import React from "react";
 import { z } from "zod";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useDispatch } from "react-redux";
 import { signupDispatch } from "../../Redux/loginslice";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { UserPlus, Mail, Lock } from "lucide-react";
 
 const schema = z.object({
-  username: z.string(),
-  email: z.string().email(),
-  password: z.string().min(8),
+  username: z.string().min(3, "Username must be at least 3 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  password: z.string().min(8, "Password must be at least 8 characters"),
 });
+
 type HookformType = z.infer<typeof schema>;
 
 function SignUp() {
   const {
-    formState: { errors },
+    formState: { errors, isSubmitting },
     handleSubmit,
     setError,
     register,
   } = useForm<HookformType>({
     resolver: zodResolver(schema),
   });
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const submitform: SubmitHandler<HookformType> = async (data) => {
     try {
       await dispatch(
@@ -35,69 +40,87 @@ function SignUp() {
       navigate("/Landing/login");
     } catch (error) {
       setError("root", {
-        message: "Mail is Not Foung",
+        message: "Email is not valid",
       });
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center mt-5 gap-10 p-5">
-      <h1 className="text-4xl text-center text-white">
-        Register <span className="text-orange-300">Page</span>
-      </h1>
-      <form
-        className="flex flex-col items-center justify-center gap-5"
-        onSubmit={handleSubmit(submitform)}
-      >
-        <div className="flex gap-5 items-center justify-center">
-          <label htmlFor="username" className="text-xl text-white select-none">
-            Username
-          </label>
-          <input
-            {...register("username", { required: true })}
-            type="text"
-            id="username"
-            placeholder="Enter Username"
-            className="bg-transparent outline-none border-b-2 border-orange-400 placeholder:text-white text-white selection:bg-orange-300"
-          />
+    <div className="space-y-6">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold text-white">
+          Create an <span className="text-orange-400">Account</span>
+        </h1>
+        <p className="text-slate-400 mt-2">
+          Join us to get started with your journey
+        </p>
+      </div>
+
+      <form onSubmit={handleSubmit(submitform)} className="space-y-5">
+        <div className="space-y-1">
+          <div className="flex items-center bg-slate-900/50 rounded-lg px-4 py-2 border border-slate-700 focus-within:border-orange-400 transition-all">
+            <UserPlus className="text-slate-400 w-5 h-5 mr-3" />
+            <input
+              {...register("username")}
+              type="text"
+              placeholder="Username"
+              className="bg-transparent w-full outline-none text-white placeholder:text-slate-400"
+            />
+          </div>
+          {errors.username && (
+            <p className="text-red-400 text-sm pl-2">
+              {errors.username.message}
+            </p>
+          )}
         </div>
-        <div className="flex gap-5 items-center justify-center">
-          <label htmlFor="email" className="text-xl text-white select-none">
-            Email
-          </label>
-          <input
-            {...register("email", { required: true })}
-            type="text"
-            id="email"
-            placeholder="Enter Email"
-            className="bg-transparent outline-none border-b-2 border-orange-400 placeholder:text-white text-white selection:bg-orange-300"
-          />
+
+        <div className="space-y-1">
+          <div className="flex items-center bg-slate-900/50 rounded-lg px-4 py-2 border border-slate-700 focus-within:border-orange-400 transition-all">
+            <Mail className="text-slate-400 w-5 h-5 mr-3" />
+            <input
+              {...register("email")}
+              type="email"
+              placeholder="Email Address"
+              className="bg-transparent w-full outline-none text-white placeholder:text-slate-400"
+            />
+          </div>
+          {errors.email && (
+            <p className="text-red-400 text-sm pl-2">{errors.email.message}</p>
+          )}
         </div>
-        {errors.email && (
-          <p className="text-red-500 text-start">{errors.email.message}</p>
-        )}
-        <div className="flex gap-5">
-          <label htmlFor="pass" className="text-xl text-white select-none">
-            Password
-          </label>
-          <input
-            {...register("password", { required: true })}
-            type="password"
-            id="pass"
-            placeholder="Enter Password"
-            className="bg-transparent outline-none border-b-2 border-orange-400 placeholder:text-white text-white selection:bg-orange-300"
-          />
+
+        <div className="space-y-1">
+          <div className="flex items-center bg-slate-900/50 rounded-lg px-4 py-2 border border-slate-700 focus-within:border-orange-400 transition-all">
+            <Lock className="text-slate-400 w-5 h-5 mr-3" />
+            <input
+              {...register("password")}
+              type="password"
+              placeholder="Password (min 8 characters)"
+              className="bg-transparent w-full outline-none text-white placeholder:text-slate-400"
+            />
+          </div>
+          {errors.password && (
+            <p className="text-red-400 text-sm pl-2">
+              {errors.password.message}
+            </p>
+          )}
         </div>
-        {errors.password && (
-          <p className="text-red-500">{errors.password.message}</p>
-        )}
+
         <button
           type="submit"
-          className="block mt-2 bg-blue-600 p-2 rounded-xl w-56 text-white text-2xl hover:scale-105 transition-transform hover:bg-blue-500"
+          disabled={isSubmitting}
+          className="w-full bg-gradient-to-r from-orange-500 to-orange-400 text-white py-3 rounded-lg font-medium text-lg hover:opacity-90 transition-all flex items-center justify-center"
         >
-          Create Account
+          {isSubmitting ? "Creating Account..." : "Create Account"}
         </button>
       </form>
+
+      <div className="text-center text-slate-400 text-sm">
+        Already have an account?{" "}
+        <Link to="/Landing/login" className="text-orange-400 hover:underline">
+          Log in
+        </Link>
+      </div>
     </div>
   );
 }

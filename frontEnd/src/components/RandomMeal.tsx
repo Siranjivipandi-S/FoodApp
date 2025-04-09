@@ -3,9 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../Redux/store";
 import { selectAllRandomMeals, fetchRandomMeal } from "../Redux/Productslice";
 import { FaCartShopping } from "react-icons/fa6";
-import { ProductsCart } from "./Category/BreakFast";
+import { IoFastFood } from "react-icons/io5";
 import { AddtoCart } from "../Redux/CartSlice";
 import toast from "react-hot-toast";
+import { FaFireAlt } from "react-icons/fa";
 
 function RandomMeal() {
   const dispatch = useDispatch();
@@ -16,7 +17,8 @@ function RandomMeal() {
   useEffect(() => {
     dispatch(fetchRandomMeal());
   }, [dispatch]);
-  const CartEvent = async (product: ProductsCart) => {
+
+  const CartEvent = async (product) => {
     try {
       await dispatch(
         AddtoCart({
@@ -28,57 +30,81 @@ function RandomMeal() {
         })
       );
 
-      toast.success("Add to Cart");
+      toast.success("Added to cart successfully!");
     } catch (error) {
       console.log(error);
+      toast.error("Failed to add to cart");
     }
   };
+
   return (
-    <div className="relative w-full h-full py-5 bg-orange-300">
-      <h1 className="text-5xl text-center">
-        Random Meal of <span className="text-red-600">The Day</span>
-      </h1>
-      <div className="flex items-center justify-around mt-5">
-        <div className="flex-col mr-5">
-          <h1 className="text-4xl font-thin">
-            Here the App Suggested Random Meal For You
-          </h1>
-          <p className="text-2xl mt-4">
-            Suggested "Meal Name" Having{" "}
-            <span className="bg-red-500 p-1">Offer Today.</span>{" "}
-          </p>
+    <div className="w-full min-h-screen flex justify-center items-center p-4 bg-slate-900">
+      <div className="w-full max-w-4xl bg-slate-900 rounded-2xl shadow-lg overflow-hidden border border-orange-100">
+        <div className="flex items-center justify-between p-5 bg-gradient-to-r from-orange-500 to-amber-500">
+          <h2 className="text-2xl font-bold text-white flex items-center">
+            <IoFastFood className="mr-2" size={28} />
+            Daily Special
+          </h2>
+          <span className="bg-red-500 text-white text-sm font-semibold px-3 py-1 rounded-full animate-pulse flex items-center">
+            <FaFireAlt className="mr-1" /> Today Only
+          </span>
         </div>
-        {randomMeal && randomMeal.length > 0 && (
-          <div className="bg-slate-800 h-[360px] w-[320px] rounded-xl relative shadow-lg overflow-hidden">
-            <div className="absolute bg-pink-50 h-[200px] w-[380px] rounded-bl-full -left-14">
-              <div className="flex items-center justify-center mt-2">
-                <img
-                  src={randomMeal[0].strMealThumb}
-                  alt={randomMeal[0].strMeal}
-                  className="ml-5 rounded-full h-44 w-52 hover:scale-110 transition-transform select-none"
-                />
-              </div>
-            </div>
-            <div className="flex flex-col z-20 mt-56 ml-4 gap-4">
-              <h2 className="text-2xl text-green-300 select-none">
-                {`${randomMeal[0].strMeal.slice(0, 30)}..`}
-              </h2>
-              <div className="flex items-center justify-between gap-4">
-                <p className="text-lg text-white select-none flex gap-1">
-                  Rs.{" "}
-                  <span className="line-through text-slate-400">
-                    {randomMeal[0].price}
-                  </span>
-                  {`${randomMeal[0]?.price - 50} Only`}
+
+        {randomMeal && randomMeal.length > 0 ? (
+          <div className="flex flex-col md:flex-row">
+            {/* Left Side - Content */}
+            <div className="md:w-1/2 p-6 flex flex-col justify-between bg-slate-800 text-white">
+              <div>
+                <h3 className="text-xl md:text-2xl font-bold mb-2">
+                  {randomMeal[0].strMeal}
+                </h3>
+                <p className="mb-6 text-gray-300">
+                  Our chef's special recommendation for today. A delightful meal
+                  prepared with premium ingredients and authentic flavors.
                 </p>
+              </div>
+
+              <div className="mt-auto">
+                <div className="flex items-baseline mb-4">
+                  <span className="text-gray-400 line-through text-lg mr-2">
+                    Rs. {randomMeal[0].price}
+                  </span>
+                  <span className="text-2xl font-bold text-orange-400">
+                    Rs. {randomMeal[0].price - 50}
+                  </span>
+                  <span className="ml-2 bg-orange-100 text-orange-700 text-xs px-2 py-1 rounded-md">
+                    Save Rs. 50
+                  </span>
+                </div>
+
                 <button
                   onClick={() => CartEvent(randomMeal[0])}
-                  className="select-none flex font-medium items-center gap-2 mr-5 bg-orange-400 rounded-full p-2 hover:bg-orange-300 hover:scale-105 transition-transform"
+                  className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-lg transition duration-300 flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
                 >
+                  <FaCartShopping size={18} />
                   Add to Cart
-                  <FaCartShopping size={20} color="white" />
                 </button>
               </div>
+            </div>
+
+            {/* Right Side - Image */}
+            <div className="md:w-1/2 relative overflow-hidden">
+              <div className="absolute top-3 left-3 bg-orange-500 text-white px-4 py-1 rounded-full font-semibold text-sm shadow-md z-10">
+                Featured
+              </div>
+              <img
+                src={randomMeal[0].strMealThumb}
+                alt={randomMeal[0].strMeal}
+                className="w-full h-72 md:h-full object-cover transform hover:scale-105 transition-transform duration-500"
+              />
+            </div>
+          </div>
+        ) : (
+          <div className="flex justify-center items-center h-64">
+            <div className="animate-pulse flex flex-col items-center">
+              <div className="rounded-full bg-slate-200 h-16 w-16 mb-4"></div>
+              <div className="h-4 bg-slate-200 rounded w-3/4 mb-2"></div>
+              <div className="h-4 bg-slate-200 rounded w-1/2"></div>
             </div>
           </div>
         )}

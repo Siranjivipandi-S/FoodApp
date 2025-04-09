@@ -1,23 +1,17 @@
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../Redux/store";
-import { selectAllBreakfasts } from "../../Redux/Productslice";
-import { Link } from "react-router-dom";
-import { FaCartShopping } from "react-icons/fa6";
 import { AddtoCart } from "../../Redux/CartSlice";
 import toast from "react-hot-toast";
-export interface ProductsCart {
-  idMeal: string;
-  strMeal: string;
-  strMealThumb: string;
-  price: number;
-  quanity?: number;
-}
-function BreakFast() {
+import FoodCard from "../FoodCard";
+import { selectAllBreakfasts } from "../../Redux/Productslice";
+
+// Breakfast Component
+export default function BreakFast() {
   const breakfast = useSelector((state: RootState) =>
     selectAllBreakfasts(state)
   );
   const dispatch = useDispatch();
-  const CartEvent = async (product: ProductsCart) => {
+
+  const CartEvent = async (product) => {
     await dispatch(
       AddtoCart({
         id: product.idMeal,
@@ -28,48 +22,43 @@ function BreakFast() {
       })
     );
 
-    toast.success("Add to Cart");
+    toast.success("Added to your cart!", {
+      icon: "🍳",
+      style: {
+        borderRadius: "10px",
+        background: "#333",
+        color: "#fff",
+      },
+    });
   };
-  return (
-    <>
-      {breakfast && breakfast.length > 0
-        ? breakfast.map((product) => (
-            <div
-              className="bg-slate-800 h-full w-[300px] mb-3 rounded-xl relative shadow-lg overflow-hidden"
-              key={product.idMeal}
-            >
-              <div className="absolute bg-pink-50 h-[200px] w-[370px] rounded-bl-full -left-14">
-                <div className="flex items-center justify-center mt-2 ml-5">
-                  <img
-                    src={product.strMealThumb}
-                    alt={product.strMealThumb}
-                    className="ml-5 rounded-full h-44 w-52 hover:scale-110 transition-transform select-none"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col z-20 mt-56 ml-4 gap-4">
-                <h2 className="text-2xl text-green-300 select-none">
-                  {product.strMeal}
-                </h2>
 
-                <div className="flex items-center justify-between">
-                  <p className="text-lg text-white select-none">
-                    Rs. {product.price}
-                  </p>
-                  <Link
-                    onClick={() => CartEvent(product)}
-                    className="select-none flex font-medium items-center gap-2 mr-5 bg-orange-400 rounded-full p-2 hover:bg-orange-300 hover:scale-105 transition-transform"
-                  >
-                    Add Cart
-                    <FaCartShopping size={20} color="white" />
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))
-        : null}
-    </>
+  return (
+    <div>
+      <h2 className="text-3xl font-bold mb-6 border-b pb-2 text-slate-300">
+        Breakfast Delights
+      </h2>
+
+      {breakfast && breakfast.length > 0 ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {breakfast.map((product) => (
+            <FoodCard
+              key={product.idMeal}
+              product={{
+                ...product,
+                rating: (Math.random() * 2 + 3).toFixed(1),
+              }}
+              onAddToCart={CartEvent}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-12">
+          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-orange-500 mb-4"></div>
+          <p className="text-gray-500">
+            Loading delicious breakfast options...
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
-
-export default BreakFast;

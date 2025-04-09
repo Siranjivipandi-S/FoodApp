@@ -40,8 +40,6 @@ def main():
             reverse=True
         )[:3]  # Get top 3 recommendations
 
-        # Return full product details to Node.js
-        print(json.dumps(recommended))  # Output valid JSON
 
     except Exception as e:
         # Print error message to stderr

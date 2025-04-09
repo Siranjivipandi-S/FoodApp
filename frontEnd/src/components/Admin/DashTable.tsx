@@ -4,6 +4,7 @@ import {
   useMaterialReactTable,
   type MRT_ColumnDef,
 } from "material-react-table";
+import { Box } from "@mui/material";
 
 interface Transaction {
   _id: string;
@@ -86,6 +87,7 @@ const AdminListTable = ({ transactions }: AdminListTableProps) => {
         accessorKey: "totalPrice",
         header: "Total Price (Rs.)",
         size: 150,
+        Cell: ({ cell }) => `₹${cell.getValue<number>()}`,
       },
     ],
     []
@@ -97,9 +99,146 @@ const AdminListTable = ({ transactions }: AdminListTableProps) => {
     initialState: {
       pagination: { pageSize: 5 },
     },
+    enableColumnFilters: false,
+    // Apply dark theme directly using Material-React-Table's theme props
+    enableRowVirtualization: false,
+    muiTablePaperProps: {
+      sx: { boxShadow: "none" },
+    },
+    muiTableContainerProps: {
+      sx: {
+        backgroundColor: "rgb(30, 41, 59)", // slate-800
+      },
+    },
+    muiTableBodyProps: {
+      sx: {
+        backgroundColor: "rgb(30, 41, 59)", // slate-800
+      },
+    },
+    muiTableBodyRowProps: {
+      sx: {
+        backgroundColor: "rgb(30, 41, 59) !important", // slate-800 with !important
+        "&:hover": {
+          backgroundColor: "rgb(51, 65, 85) !important", // slate-700 with !important
+        },
+        // Force all child cells to inherit background
+        "& > td": {
+          backgroundColor: "inherit !important",
+          color: "white !important",
+        },
+      },
+    },
+    muiTableBodyCellProps: {
+      sx: {
+        backgroundColor: "rgb(30, 41, 59) !important", // slate-800 with !important
+        color: "white !important",
+        borderBottom: "1px solid rgba(148, 163, 184, 0.2)",
+      },
+    },
+    muiTableHeadProps: {
+      sx: {
+        backgroundColor: "rgb(15, 23, 42)", // slate-900
+      },
+    },
+    muiTableHeadCellProps: {
+      sx: {
+        backgroundColor: "rgb(15, 23, 42) !important", // slate-900 with !important
+        color: "white !important",
+        borderBottom: "1px solid rgba(148, 163, 184, 0.2)",
+        fontWeight: "bold",
+      },
+    },
+    muiBottomToolbarProps: {
+      sx: {
+        backgroundColor: "rgb(30, 41, 59)", // slate-800
+        color: "white",
+      },
+    },
+    muiTopToolbarProps: {
+      sx: {
+        backgroundColor: "rgb(30, 41, 59)", // slate-800
+        color: "white",
+      },
+    },
+    // Style the pagination controls
+    muiPaginationProps: {
+      sx: {
+        color: "white !important",
+        ".MuiPaginationItem-root": {
+          color: "white !important",
+        },
+      },
+    },
+    // Style the table pagination component
+    muiTablePaginationProps: {
+      sx: {
+        color: "white !important",
+        "& .MuiSelect-root": {
+          color: "white !important",
+        },
+        "& .MuiSelect-icon": {
+          color: "white !important",
+        },
+        "& .MuiInputBase-root": {
+          color: "white !important",
+        },
+        "& .MuiTablePagination-selectLabel": {
+          color: "white !important",
+        },
+        "& .MuiTablePagination-displayedRows": {
+          color: "white !important",
+        },
+        "& .MuiTablePagination-actions": {
+          color: "white !important",
+        },
+      },
+    },
   });
 
-  return <MaterialReactTable table={table} />;
+  // Add a CSS reset to override any internal styles
+  return (
+    <Box
+      sx={{
+        "& .MuiPaper-root": { backgroundColor: "rgb(30, 41, 59) !important" },
+        "& .MuiTableCell-root": {
+          backgroundColor: "rgb(30, 41, 59) !important",
+          color: "white !important",
+        },
+        "& .MuiTableCell-head": {
+          backgroundColor: "rgb(15, 23, 42) !important",
+          color: "white !important",
+        },
+        "& .MuiTableRow-root": {
+          backgroundColor: "rgb(30, 41, 59) !important",
+        },
+        "& .MuiIconButton-root": { color: "white !important" },
+        "& .MuiSelect-icon": { color: "white !important" },
+        "& .MuiSvgIcon-root": { color: "white !important" },
+        "& .MuiInputBase-root": { color: "white !important" },
+        "& .MuiTablePagination-root": { color: "white !important" },
+        "& .MuiToolbar-root": {
+          color: "white !important",
+          backgroundColor: "rgb(30, 41, 59) !important",
+        },
+        "& .MuiSelect-select": { color: "white !important" },
+        "& .MuiTablePagination-selectLabel": { color: "white !important" },
+        "& .MuiTablePagination-displayedRows": { color: "white !important" },
+        "& .MuiTablePagination-actions": { color: "white !important" },
+        // Target the menu items in the rows per page dropdown
+        "& .MuiMenu-paper": {
+          backgroundColor: "rgb(30, 41, 59) !important",
+        },
+        "& .MuiMenuItem-root": {
+          color: "white !important",
+          "&:hover": {
+            backgroundColor: "rgb(51, 65, 85) !important",
+          },
+        },
+      }}
+    >
+      <MaterialReactTable table={table} />
+    </Box>
+  );
 };
 
 export default AdminListTable;

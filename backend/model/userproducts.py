@@ -17,7 +17,6 @@ def main():
             p["mealName"] for p in input_data["cart"] if isinstance(p, dict) and "mealName" in p
         ]).strip()
 
-        print(cart_descriptions,"Cart Des")
         products = input_data["products"]
 
         descriptions = [
@@ -52,7 +51,6 @@ def main():
             reverse=True
         )[:3]  # Top 6 recommendations
 
-        print(json.dumps(recommended))  
 
     except Exception as e:
         print(json.dumps({"error": str(e)}), file=sys.stderr)
